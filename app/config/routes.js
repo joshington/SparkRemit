@@ -35,6 +35,15 @@ import Dashboard from '../screens/Dashboard'
 import Statistics from '../screens/Statistics';
 // const Stack = createStackNavigator();
 import AddCard from '../screens/AddCard';
+import EmailAndNumber from '../screens/EmailAndNumber';
+import VerifyEmail from '../screens/VerifyEmail';
+import SparkPin from '../screens/SparkPin';
+import SparkUsername from '../screens/SparkUsername';
+import MyProfile from '../screens/MyProfile';
+import SendMoney from '../screens/Send';
+import Login from '../screens/Login';
+import ForgotPin from '../screens/ForgotPin';
+import FinalSend from '../screens/FinalSend';
 
 
 
@@ -51,8 +60,6 @@ const RootHome = () => {
                         iconName = "home";
                     }else if(route.name === 'Wallet'){
                         iconName = "wallet"
-                    }else if(route.name === 'MyProfile'){
-                        iconName = "person"
                     }
                     return (
                         <Ionicons name={iconName} size={32} color="black" />
@@ -72,54 +79,45 @@ const RootHome = () => {
                 }}
             />
             <Tabs.Screen  name="Dashboard" component={WalletStack} />
-            <Tabs.Screen name="MyProfile" component={UserAuth} />
+            {/* <Tabs.Screen name="MyProfile" component={UserAuth} /> */}
         </Tabs.Navigator>
     )
 }
 
 const HomeStack = () => {
     return (
-        <Stack.Navigator headerMode="none">
-            <Stack.Screen name="Welcome" component={Welcome} />
-            <Stack.Screen name="Dashboard" component={Dashboard} />
-            <Stack.Screen name="MyProfile" component={UserAuth} />
+        <Stack.Navigator>
+            <Stack.Screen options={{headerShown:false}} name="Welcome" component={Welcome} />
+            <Stack.Screen options={{headerShown:false}}  name="Register" component={EmailAndNumber} />
+            <Stack.Screen   name="Login" component={Login} />
+            <Stack.Screen   options={{headerShown:false}} name="ForgotPin" component={ForgotPin} />
+            <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+            <Stack.Screen name="SparkPin" component={SparkPin} />
+            <Stack.Screen options={{headerShown:false}} name="SparkUsername" component={SparkUsername} />
+            <Stack.Screen options={{headerShown:false}} name="Dashboard" component={Dashboard} />
+            <Stack.Screen  name="MyProfile" component={MyProfile}  />
+            <Stack.Screen  name="AddCard" component={AddCard}  />
+            <Stack.Screen  name="SendMoney" component={SendMoney}  />
+            <Stack.Screen  name="FinalSend" component={FinalSend}  />
+            <Stack.Screen  name="MobileMoney" component={MobileMoney}  />
+           
             
         </Stack.Navigator>
     )
 }
 
-//now handling the admin
-const AdminStack = () => {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="AdminAuth" component={AdminAuth} />
-            <Stack.Screen name="Admin" component={Admin} />
-            {/* <Stack.Screen name="MyProfile" component={UserAuth} /> */}
-            
-        </Stack.Navigator> 
-    )
-}
 
-// const UserStack = () => {
-//     return (
-//         <Stack.Navigator>
-//             <Stack.Screen name="UserAuth" component={UserAuth} />
-//             {/* <Stack.Screen name="MyProfile" component={UserAuth} /> */}
-            
-//         </Stack.Navigator> 
-//     )
-// }
-//now the wallet stack
 const WalletStack = ({navigation}) => {
     return(
         <Stack.Navigator>
             <Stack.Screen options={{headerShown:false}} name="Dashboard" navigation={navigation} component={Dashboard}  />
+            <Stack.Screen  name="MyProfile" component={MyProfile}  />
             <Stack.Screen  name="Deposit" component={DepositWallet}  />
             <Stack.Screen  name="MobileMoney" component={MobileMoney}  />
             <Stack.Screen  name="BankDeposit" component={BankDeposit}  />
             <Stack.Screen  name="Transactions" component={Transactions}  />
             <Stack.Screen options={{headerShown:false}} name="Statistics" component={Statistics}  />
-            <Stack.Screen options={{headerShown:false}} name="AddCard" component={AddCard}  />
+          
             {/* <Stack.Screen  name="Send" component={SendToAnother}  /> */}
         </Stack.Navigator>
     )
@@ -132,24 +130,13 @@ const Navigator = () => {
                 {/* <Stack.Screen  options={{headerShown:false}} name="rootHome" component={RootHome} /> */}
                 <Stack.Screen  name="Home" component={HomeStack} />
                 <Stack.Screen  name="Dashboard" component={WalletStack} />
-                <Stack.Screen  name="AdminStack" component={AdminStack} />
-                <Stack.Screen  name="UserAuth" component={UserAuth} />
 
             </Stack.Navigator>
         </NavigationContainer>
     )
 }
 
-// const Navigator = () => {
-//     return(
-//         <NavigationContainer>
-//           <Stack.Navigator screenOptions={{headerShown:false}} >
-//             <Stack.Screen name='Welcome' component={Welcome} />
-//             <Stack.Screen name ='Home' component={Home} />
-//           </Stack.Navigator>
-//         </NavigationContainer>
-//     );
-// } 
+
 
 
 export default Navigator;

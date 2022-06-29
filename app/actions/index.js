@@ -3,11 +3,38 @@ import {
     LOGIN_START,LOGIN_SUCCESS,LOGIN_FAIL,STORE_EMAIL,WALLET_TOP_SUCCESS,WALLET_TOP_FAIL,STORE_REG_EMAIL,
 
     GET_WALLET_SUCCESS,GET_WALLET_FAIL,
-    GET_TRANSACTIONS_SUCCESS,GET_TRANSACTIONS_FAIL
+    GET_TRANSACTIONS_SUCCESS,GET_TRANSACTIONS_FAIL,
+    GET_SPARK_USERS_SUCCESS,GET_SPARK_USERS_FAIL,STORE_SPARK_USER
 
 
 } from "./actionTypes"
 import axios from 'axios';
+
+
+
+export const check_text = (uname) => {
+    console.log('hey there')
+}
+
+
+//====dispatch all users that start with the username when trying to type
+export const all_spark_users = (uname) => {
+    return (dispatch) => {
+        axios.get(`https://pregcare.pythonanywhere.com/api/wallet/wallet_users/?uname=${uname}`)
+        .then(response => {
+            dispatch({
+                type:GET_SPARK_USERS_SUCCESS,
+                payload:response.data
+            }).catch(error => {
+                dispatch({
+                    type:GET_SPARK_USERS_FAIL,
+                    payload:error.payload
+                })
+            })
+        })
+    }
+}
+
 
 //==task is to fetch the transactions of the 
 export const getTransactions = (user_email) => {
@@ -47,7 +74,13 @@ export const getWalletDetails = (user_email) => {
     }
 }
 
-
+//we are going to ue this action when storing the spark user
+export const storeSparkUser = (user) => {
+    return{
+        type:STORE_SPARK_USER,
+        user
+    }
+}
 //action is to store email in state 
 
 
@@ -65,16 +98,26 @@ export const storeRegEmail = (user_email) => {
     }
 }
 
+
+
+
+
+
+
 //===action is to make a successful topup to the wallet
 
 export const walletTopUp = (user_email,amount) => {
     return(dispatch) => {
         console.log('=====starting topup=====')
-        axios.post(`https://pregcare.pythonanywhere.com/api/wallet/wallet_topup_success/?email=${user_email}&amount=${amount}`)
-        .then(response => {
+        fetch(`https://pregcare.pythonanywhere.com/api/wallet/wallet_topup_success/?email=${user_email}&amount=${amount}`,{
+            method:'POST',
+            headers:{'Content-type': 'application/json;',}
+        })
+        .then(response => response.json())
+        .then(data => {
             dispatch({
                 type:WALLET_TOP_SUCCESS,
-                payload:response.data
+                payload:data
             })
         }).catch(error => {
             dispatch({
@@ -85,19 +128,42 @@ export const walletTopUp = (user_email,amount) => {
     }
 }
 
+//==action to login user through their pin=====
+export const loginUser = (PIN) => {
+    return (dispatch) => {
+        dispatch({
+            type:LOGIN_START
+        })
+        console.log('logging the user now')
+        axios.post(`https://pregcare.pythonanywhere.com/api/auth/login-user/?PIN=${PIN}`)
+        .then(response => {
+            dispatch({
+                type:LOGIN_SUCCESS,
+                payload:response.data
+            })
+            console.log('logged in====')
+        }).catch(error => {
+            console.log('didnt login')
+            dispatch({
+                type:LOGIN_FAIL,
+                error:error.message
+            }) 
+        })
+    }
+}
 
 
 //==action for reffgistering user====
-export const registerUser = ({username,email,phone,password}) => {
+export const registerUser = (email,phone) => {
     return (dispatch) => {
         dispatch({
             type:REGISTER_START
         })
         console.log('registering the user now')
 
-        fetch('http://localhost:8000/api/auth/register',{
+        fetch('https://pregcare.pythonanywhere.com/api/auth/register',{
             method:'POST',
-            body:JSON.stringify({username,email,phone,password}),
+            body:JSON.stringify({email,phone}),
             headers:{
                 'Content-type': 'application/json;',
             }
@@ -117,31 +183,5 @@ export const registerUser = ({username,email,phone,password}) => {
     }
 }
 
-export const loginUser = ({email,password}) => {
-    return (dispatch) => {
-        dispatch({
-            type:LOGIN_START
-        })
-        console.log('logging the user now')
 
-        fetch('http://localhost:8000/api/auth/login',{
-            method:'POST',
-            body:JSON.stringify({email,password}),
-            headers:{
-                'Content-type': 'application/json; charset=UTF-8',
-            }
-        }).then(response => {
-            dispatch({
-                type:LOGIN_SUCCESS,
-                payload:response.data
-            })
-            console.log('logged in====')
-        }).catch(error => {
-            console.log('didnt login')
-            dispatch({
-                type:LOGIN_FAIL,
-                error:error.message
-            }) 
-        })
-    }
-}
+

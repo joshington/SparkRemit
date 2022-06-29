@@ -130,7 +130,7 @@ CurrencyPicker.propTypes = {
     onValueChange: PropTypes.func,
 };
 
-const MobileMoney = () => {
+const MobileMoney = ({route,navigation}) => {
     const [currency, setCurrency] = useState("UGX");
     const [amount, setAmount] = useState(10000);
     const [email, setEmail] = useState("");
@@ -170,6 +170,9 @@ const MobileMoney = () => {
             //and the transaction id
             //==time for the margic to start
             dispatch(walletTopUp(target_email,amount))
+            Toast.show("Payment completed")
+            navigation.navigate("Dashboard")
+            //
             //this above does the magic
         }else if(data.status === "cancelled"){
             Toast.show("Payment Not completed")
@@ -249,7 +252,7 @@ const MobileMoney = () => {
                     options={{
                         tx_ref: makeid(10),
                         authorization:
-                            "FLWPUBK-cb38d8ffef2a9521711f24187beb95aa-X",
+                            "FLWPUBK-253d6258de134d39d454c04310656340-X",
                         customer: {
                             email:target_email,
                             name:'user',

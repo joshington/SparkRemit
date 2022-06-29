@@ -15,21 +15,57 @@ import { useFonts } from 'expo-font'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import {useSelector,useDispatch} from  'react-redux';
 //====adding flutterwave====
+import {getTransactions} from '../actions';
+import Separator from '../components/Separator'
 
 
+
+
+//cpt with icon and amount either sent or received
+const TransactImage = ({day,date,category,amount}) => {
+    return (
+        <>
+            <View style={{display:"flex",flexDirection:"row",backgroundColor:"green",padding:hp('2%'),
+                borderRadius:10,
+                justifyContent:"space-between",marginTop:hp('3%'),width:wp('90%')}}>
+                <View>
+                    <Text style={{fontSize:18}}>{day}</Text>
+                    <Text style={{color:"white",fontWeight:"bold"}}>{date}</Text>
+                </View>
+                <View>
+                    <Text style={{fontSize:22}}>{category}</Text>
+                    <Text style={{fontSize:20,color:"yellow",fontWeight:"bold"}}>UGX: {amount}</Text>
+                </View>
+            </View>
+          
+        </>
+        
+        
+    )
+}
 
 const Dashboard = ({navigation}) => {
     
     //==use the useSelector to retrieve the stored email
     const email = useSelector(state => state.wallet.user_email)
-    console.log(email)//first confirm  this email
+    //console.log(email)
+    const logEmail = useSelector(state => state.register.logEmail);
+    console.log(logEmail)//print out the email
+    //===aslo the loggedIn condition will clear some air
 
+    const isLog = useSelector(state => state.register.loggedIn)//checking will help me tell the email to give to user
     //===cz target is to fetch the wallet _user details'
 
     const [isFetching, setFetching] = useState(false);
     const [details, setDetails] = useState({});//since its an object
 
+    const dispatch = useDispatch()
 
+    // const [last7, setLast7] = useState({});
+    const last7 = useSelector(state => state.wallet.last7);
+
+    const arr = last7.last7
+    let counter = 1;//==to help us list the transactions
 
 
     const fetchUserDetails = async () => {
@@ -37,23 +73,41 @@ const Dashboard = ({navigation}) => {
             const response = await fetch(`https://pregcare.pythonanywhere.com/api/wallet/wallet_details/?email=${email}`);
             const data = await response.json();
             setDetails(data);
-            console.log(details);//getting the details
+            // console.log(details);//getting the details
             setFetching(false);
         }catch(e){
-            console.log(e);
+            // console.log(e);
             setFetching(false);
         }
     }
+    // const getTransactions = () => {
+    //     return (dispatch) => {
+    //         fetch(`https://pregcare.pythonanywhere.com/api/wallet/last7/?email=${email}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log("--ineed data==")
+    //             console.log(data)
+    //             setLast7(data.last7)
+              
+    //         }).catch(error => {
+    //             console.log(error)
+    //         })
+    //     }
+    // }
     //==now the useEffect
     useEffect(() => {
         let isMount = true;
         setFetching(true)
         //call the fetch details
         fetchUserDetails();
+
+        //also get the transactions
+        dispatch(getTransactions(email))
         return () => {
             isMount = false
         }
     }, []);
+
     const {balance,owner,status} = details;
     return  (
         //destructure the details
@@ -79,10 +133,14 @@ const Dashboard = ({navigation}) => {
                          {/* Bell icon and profile pic */}
                         <View style={{flexDirection:'row',alignItems:'center'}} >
                             <Icon name='bell' size={30} color="#fff" />
-                             {/* <Image source={require('../../assets/images/avatar.jpg')} resizeMode='cover' style={{width:40,height:40,borderRadius:20,marginLeft:15}} /> */}
-                             <FontAwesome name="user-circle-o" 
-                                size={40} color="black" style={{marginHorizontal:wp('5%')}}
-                            />
+                            <TouchableOpacity 
+                                onPress={() => navigation.navigate("MyProfile")}
+                            >
+                                <FontAwesome name="user-circle-o" 
+                                    size={40} color="black" style={{marginHorizontal:wp('5%')}}
+                                />
+                            </TouchableOpacity>
+                             
                         </View>
                      </View>
 
@@ -91,7 +149,7 @@ const Dashboard = ({navigation}) => {
                         justifyContent:'space-between',alignItems:'center',marginBottom:hp('2.6%')}}>
                         <View style={{flexDirection:'column'}}>
                             <Text style={{color:'#fff',fontWeight:"bold",fontSize:28}}>
-                                UGX: {balance}
+                               UGX: {balance}
                             </Text>
                         </View>
                         {/* profit loss indicator */}
@@ -110,7 +168,11 @@ const Dashboard = ({navigation}) => {
                                 onPress={() => navigation.navigate('MobileMoney')}
                             />
 
-                            <ActionCenter img_src={require('../../assets/icons/buy.png')} img_text="Send" />
+                            <ActionCenter 
+                                img_src={require('../../assets/icons/buy.png')} 
+                                img_text="Send" 
+                                onPress={() => navigation.navigate('SendMoney')}
+                            />
 
                             <ActionCenter img_src={require('../../assets/icons/withdraw.png')} img_text="WithDraw" />
 
@@ -119,112 +181,29 @@ const Dashboard = ({navigation}) => {
 
                         <View style={{flexDirection:'column'}} >
                             {/* Text and button */}
-                            <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:hp('4%')}} >
-                                <Text style={{color:'#333',fontSize:22}} >My Actions</Text>
+                            <Text style={{color:'#333',fontSize:22, marginTop:hp('2%')}} >Latest Transactions</Text>
+                            <View  style={{height:StyleSheet.hairlineWidth,width:wp('95%'),backgroundColor:"black",marginHorizontal:wp('5%')}}  />
                                
+                                <FlatList 
+                                    data={last7.last7}
+                                    renderItem={({item}) => (
+                                        <TransactImage 
+                                            day={item[2]}
+                                            date={item[3]}
+                                            category={item[0]}
+                                            amount={item[1]}
+                                        /> 
+                                    )}
+                                    ItemSeparatorComponent={Separator}
+                                    
+
+                                />
+                            <View>
+                                
                             </View>
-
-
                            
-                            <View style={{flexDirection:"row",flexWrap:"wrap"}}>
-                                <TouchableOpacity 
-                                    style={{
-                                        height:hp('20%'),width:wp('40%'),borderWidth:1,
-                                        borderColor:'#ddd',backgroundColor:'#fff',
-                                        borderRadius:15,marginRight:10,marginTop:10
-                                    }}  
-                                    onPress={() => navigation.navigate('AddCard')}
-                                    
-                                >
-                                    
-
-
-                                    {/* coin and price indicator */}
-                                    <View style={{marginTop:20,justifyContent:'space-around',alignItems:'center'}} >
-                                        {/* Coin Price */}
-
-                                        <View style={{flexDirection:'column'}} >
-                                            <Fontisto name="credit-card" size={40} color="black" />
-                                            <Text style={{color:'#333',fontSize:20}} >
-                                                Cards</Text>
-                                            
-                                        </View>
-
-                                        {/* indicator */}
-                                        {/* <ProfitIndicator type={item.type} percentage_change={item.changes} /> */}
-
-                                    </View>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity 
-                                    style={{position:'relative',flexDirection:'column',height:hp('20%'),width:wp('40%'),
-                                    borderWidth:1,borderColor:'#ddd',
-                                    backgroundColor:'#fff',borderRadius:15,marginRight:10,marginTop:10}}  
-                                    onPress={() => navigation.navigate('Statistics')} 
-                                >
-                                
-                                    {/* coin and price indicator */}
-                                    <View style={{flexDirection:'row',marginTop:20,justifyContent:'space-around',alignItems:'center'}} >
-                                        {/* Coin Price */}
-
-                                        <View style={{flexDirection:'column'}} >
-                                            
-                                            <Entypo name="bar-graph" size={40} color="black" />
-                                            <Text style={{color:'#333',fontSize:20}} >
-                                                Statistics</Text>
-                                        </View>
-
-                                        {/* indicator */}
-                                        {/* <ProfitIndicator type={item.type} percentage_change={item.changes} /> */}
-
-                                    </View>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity 
-                                    style={{position:'relative',flexDirection:'column',height:hp('20%'),width:wp('40%'),
-                                    borderWidth:1,borderColor:'#ddd',backgroundColor:'#fff',
-                                    borderRadius:15,marginRight:10,marginTop:10}}  
-                                    onPress={() => navigation.navigate('Transactions')} 
-                                >
-                                    {/* coin and price indicator */}
-                                    <View 
-                                        style={{flexDirection:'row',marginTop:20,justifyContent:'space-around',alignItems:'center'}}
-                                    >
-                                        {/* Coin Price */}
-
-                                        <View style={{flexDirection:'column'}} >
-                                           
-                                            <FontAwesome name="exchange" size={40} color="black" />
-                                            <Text style={{color:'#333',fontSize:20}} >
-                                                Transactions
-                                            </Text>
-                                        </View>
-
-                                        {/* indicator */}
-                                        {/* <ProfitIndicator type={item.type} percentage_change={item.changes} /> */}
-
-                                    </View>
-                                </TouchableOpacity>
-
-                                <View style={{position:'relative',flexDirection:'column',height:hp('20%'),width:wp('40%'),borderWidth:1,borderColor:'#ddd',backgroundColor:'#fff',borderRadius:15,marginRight:10,marginTop:10}}  >
-                                
-                                    {/* coin and price indicator */}
-                                    <View style={{flexDirection:'row',marginTop:20,justifyContent:'space-around',alignItems:'center'}} >
-                                        {/* Coin Price */}
-
-                                        <View style={{flexDirection:'column'}} >
-                                            <MaterialCommunityIcons name="contacts" size={45} color="black" />
-                                            <Text style={{fontSize:25}}>Contacts</Text>
-                                        </View>
-
-                                        {/* indicator */}
-                                        {/* <ProfitIndicator type={item.type} percentage_change={item.changes} /> */}
-
-                                    </View>
-                                </View>
-
-                            </View>
-                
+                           
+                            
                         </View>
                     </View>
 

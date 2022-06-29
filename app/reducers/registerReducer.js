@@ -8,11 +8,13 @@ import {
 const INITIAL_STATE = {
     registerStart:false,
     registered:false,
-    regUserDetails:null,
+    regUserDetails:{},
     loginStart:false,
+    logEmail:"",
     loggedIn:false,
     regFailed:false,
     logFailed:false
+    
 }
 
 const userReducer = (state=INITIAL_STATE,action) => {
@@ -44,6 +46,7 @@ const userReducer = (state=INITIAL_STATE,action) => {
             return {
                 ...state,
                 loggedIn:true,
+                logEmail:payload.email     //helps us get the email from the payload
             }
         case "LOGIN_FAIL":
             return {

@@ -3,7 +3,7 @@ import userReducer from './registerReducer';
 import walletReducer from './walletReducer';
 
 const rootReducer = combineReducers({
-    regDetails:userReducer,
+    register:userReducer,
     wallet:walletReducer
 })
 

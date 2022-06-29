@@ -15,10 +15,9 @@ import { FontAwesome } from '@expo/vector-icons';
 const AddCard = () => {
     return (
         <View style={{flex:1}}>
-            <View style={{height:hp('12%'),backgroundColor:"green"}}>
-            </View>
+
             <View style={{alignItems:"center",marginVertical:hp('5%')}}>
-                <FontAwesome name="credit-card-alt" size={160} color="black" />
+                <FontAwesome name="credit-card-alt" size={70} color="black" />
             </View>
             <View style={{marginHorizontal:wp('7%')}}>
                 <Text style={{fontSize:25}}>ADD CARD</Text>

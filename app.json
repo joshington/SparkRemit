@@ -4,10 +4,10 @@
     "slug": "SparkRemit",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/spark_m.png",
+    "icon": "./assets/new.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/new.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

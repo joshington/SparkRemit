@@ -5,7 +5,7 @@ import {
     widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import { useDispatch,useSelector } from 'react-redux';
-import {all_spark_users,storeSparkUser,check_text} from '../actions';
+import {all_spark_users,storeSparkUser,check_text,checkCommand} from '../actions';
 import axios from 'axios';
 import Separator from '../components/Separator';
 
@@ -40,7 +40,10 @@ const SendMoney = ({navigation}) => {
     const [searching, setSearching] = useState(false);
 
 
-
+    //get the email====
+    const email = useSelector(state => state.wallet.user_email)
+    console.log("===email====")
+    console.log(email)
     //===for dispatcing actions=====
     const dispatch = useDispatch()
 
@@ -75,17 +78,22 @@ const SendMoney = ({navigation}) => {
                         Spark User</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{height:hp('9%'),
-                    backgroundColor:"green",paddingVertical:hp('2%'),width:wp('40%'),borderRadius:hp('2%')}}>
+                    backgroundColor:"green",paddingVertical:hp('2%'),width:wp('40%'),borderRadius:hp('2%')}}
+                    onPress={() => {
+                        dispatch(checkCommand(false))
+                        navigation.navigate("CheckNon")
+                    }}
+                >
                     <Text style={{textAlign:"center",fontSize:20,color:"white"}}>Non User</Text>
                 </TouchableOpacity>
 
             </View>
             <Text style={{textAlign:"center",marginTop:hp('3%'),fontSize:20}}>search for user's username</Text>
             <LabelInput 
-                placeText="Search for user e.g @bosa"
+                placeText="Search for user e.g @spark"
                 value={username}
                 onChangeText={(text) => {
-                    fetch(`https://pregcare.pythonanywhere.com/api/wallet/wallet_users/?uname=${text}`)
+                    fetch(`https://pregcare.pythonanywhere.com/api/wallet/wallet_users/?email=${email}&uname=${text}`)
                     .then(response => response.json())
                     .then(data => {
                         console.log('loggg')
@@ -112,14 +120,14 @@ const SendMoney = ({navigation}) => {
                     <>
                    
                     <View>
-                        <View style={{marginHorizontal:wp('6%'),marginTop:hp('2%'),borderRadius:10,padding:hp('3%'),
+                        <View style={{marginHorizontal:wp('6%'),marginTop:hp('2%'),borderRadius:10,padding:hp('1.5%'),
                             backgroundColor:"gray"}}>
                                <FlatList 
                                     data={Data}
                                     renderItem={({item}) => (
                                         <TouchableOpacity  
                                            
-                                            style={{ backgroundColor: selected ? 'white':"",height:hp('8%')}} 
+                                            style={{ backgroundColor: selected ? 'white':"",height:hp('4%')}} 
                                             onPress={() => {
                                                 setSelected(true)
                                                             // let user= {user}
@@ -131,10 +139,11 @@ const SendMoney = ({navigation}) => {
                                     </TouchableOpacity>
                                     )}
                                     ItemSeparatorComponent={Separator}
+                                    scrollEnabled={true}
                                 /> 
                         </View>
                         <TouchableOpacity style={{backgroundColor:"green",
-                            marginHorizontal:wp('6%'),borderRadius:10,marginTop:hp('1%'),
+                            marginHorizontal:wp('6%'),borderRadius:15,marginTop:hp('1%'),
                             height:hp('10%'),margin:hp('4%')}}
                             onPress={() => navigation.navigate("FinalSend")}
                         >

@@ -1,6 +1,6 @@
 import {useRoute} from "@react-navigation/native";
 import React,{useState,useEffect} from 'react'
-import {Text,View,StyleSheet,Image,TouchableOpacity,StatusBar,
+import {Text,View,StyleSheet,Image,TouchableOpacity,StatusBar,Modal,Pressable,
     ScrollView, Touchable, FlatList,ActivityIndicator} from 'react-native'
 //import LinearGradient from 'react-native-linear-gradient'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -44,8 +44,61 @@ const TransactImage = ({day,date,category,amount}) => {
     )
 }
 
+
+const EmptyListMessage = () => {
+    return (
+      // Flat List Item
+      <View style={{alignItems:"center",paddingVertical:hp('20%')}}>
+        <Text style={{textAlign:"center",fontSize:30}}>
+            No Transactions Found
+        </Text>
+      </View>
+      
+    );
+  };
+
+
+
+
+
+
 const Dashboard = ({navigation}) => {
     
+
+    //===this is now to control the modal=====
+    const [modalVisible, setModalVisible] = useState(false);
+
+
+    //==now this is for the modal cpt====
+    const Modal = () => {
+        return (
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                 <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Hello World!</Text>
+                        <Pressable
+                        style={[styles.button, styles.buttonClose]}
+                        onPress={() => setModalVisible(!modalVisible)}>
+                        <Text style={styles.textStyle}>Hide Modal</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+
+
+
+
+
     //==use the useSelector to retrieve the stored email
     const email = useSelector(state => state.wallet.user_email)
     //console.log(email)
@@ -108,7 +161,7 @@ const Dashboard = ({navigation}) => {
         }
     }, []);
 
-    const {balance,owner,status} = details;
+    const {balance,owner,status,currency,country} = details;
     return  (
         //destructure the details
         
@@ -149,7 +202,7 @@ const Dashboard = ({navigation}) => {
                         justifyContent:'space-between',alignItems:'center',marginBottom:hp('2.6%')}}>
                         <View style={{flexDirection:'column'}}>
                             <Text style={{color:'#fff',fontWeight:"bold",fontSize:28}}>
-                               UGX: {balance}
+                               {currency}: {balance}
                             </Text>
                         </View>
                         {/* profit loss indicator */}
@@ -165,28 +218,52 @@ const Dashboard = ({navigation}) => {
                             <ActionCenter 
                                 img_src={require('../../assets/icons/top-up.png')} 
                                 img_text="Top-Up" 
-                                onPress={() => navigation.navigate('MobileMoney')}
+                                onPress={
+                                    () => navigation.navigate('MobileMoney')
+                                }
                             />
 
                             <ActionCenter 
                                 img_src={require('../../assets/icons/buy.png')} 
                                 img_text="Send" 
-                                onPress={() => navigation.navigate('SendMoney')}
+                                onPress={
+                                    // () => setModalVisible(true)
+                                    () => {
+                                        setModalVisible(true)
+                                        // navigation.navigate('SendMoney')
+                                    }
+                                }
                             />
 
-                            <ActionCenter img_src={require('../../assets/icons/withdraw.png')} img_text="WithDraw" />
+                            <ActionCenter 
+                                img_src={require('../../assets/icons/withdraw.png')} 
+                                img_text="WithDraw" 
+                                onPress={() => navigation.navigate('CheckPin')}
+                            />
 
                         </View>
 
-
-                        <View style={{flexDirection:'column'}} >
+                       
+                        <View style={{display:"flex",position:"relative"}} >
                             {/* Text and button */}
                             <Text style={{color:'#333',fontSize:22, marginTop:hp('2%')}} >Latest Transactions</Text>
-                            <View  style={{height:StyleSheet.hairlineWidth,width:wp('95%'),backgroundColor:"black",marginHorizontal:wp('5%')}}  />
+                            <View>
+                                {
+                                    modalVisible 
+                                    ? (
+                                        <View style={{display:"flex",position:"absolute"}}>
+
+                                        </View>
+                                    ): null
+                                }
+                            </View>
+                            <View  style={{height:StyleSheet.hairlineWidth,width:wp('100%'),
+                                backgroundColor:"black"}}  />
                                
                                 <FlatList 
                                     data={last7.last7}
-                                    renderItem={({item}) => (
+                                    renderItem={({item,index}) => (
+                                        
                                         <TransactImage 
                                             day={item[2]}
                                             date={item[3]}
@@ -195,7 +272,7 @@ const Dashboard = ({navigation}) => {
                                         /> 
                                     )}
                                     ItemSeparatorComponent={Separator}
-                                    
+                                    ListEmptyComponent={EmptyListMessage}
 
                                 />
                             <View>
@@ -215,6 +292,41 @@ const Dashboard = ({navigation}) => {
 }
 
 const styles = StyleSheet.create({
-    
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+    },
 })
 export default Dashboard;

@@ -17,6 +17,8 @@ import { FontAwesome, Entypo} from '@expo/vector-icons';
 import {LinearGradient} from 'expo-linear-gradient'
 import sparkhome from '../../assets/sparkbg.png';
 
+
+
 const Icon = ({ iconBackground,direction,margPercent,margRight,marBot}) => {
     return (
         <View  style={{
@@ -85,44 +87,23 @@ const Welcome = ({route,navigation}) => {
             <LinearGradient start={{x:0.0,y:0.4}} end={{x:0.5,y:1.0}} location={[0,1]} colors={['#2D97DA','#2249D6']} style={{flex:1}} >
                 {/* Top Section */}
                 <StatusBar barstyle="light-content" translucent={true} backgroundColor="transparent" />
-                {/* <TouchableOpacity
-                    onPress={() => navigation.navigate('AdminStack')}
-                >
-                    <View>
-                        <Entypo 
-                            name="menu" 
-                            size={50} 
-                            color="black" 
-                            style={{
-                                alignSelf:"flex-end",
-                                marginTop:hp('4%'),
-                                marginRight:wp('10%')
-                            }}
-                        />
-                        
-                    </View>
-                </TouchableOpacity>  */}
-                {/* <View>
-                    <Text style={{textAlign:"center",marginBottom:hp('3%'),fontSize:hp('5%'),color:"green",fontWeight:"bold"}}>
-                        Spark Remit
-                    </Text>
-                </View> */}
                 <View style={{flex:2,flexDirection:'row',
-                    justifyContent:'center',alignItems:'flex-start'
+                    justifyContent:'center',alignItems:'flex-start',marginTop:hp('5%')
                 }} >
                    <Image resizeMode='contain' style={{width:wp('90%'),height:hp('50%')}} source={sparkhome} />
                 </View>
                 {/* Button and text section */}
-                <View style={{flex:3,justifyContent:'center',paddingHorizontal:wp('6%')}} >
+                <View style={{flex:3,justifyContent:'center',padding:wp('8%'),marginTop:hp('6%')}} >
                     <View style={{position:'relative',flexDirection:'column',
-                    backgroundColor:'rgba(255,255,255,0.3)',height:hp('45%'),
-                    borderRadius:15,paddingTop:20,paddingHorizontal:wp('5%')}} >
+                    backgroundColor:'green',height:hp('40%'),
+                    borderRadius:15,paddingTop:hp('4%'),paddingHorizontal:wp('5%')}} >
                         <Text style={{
                             fontSize:25,
                             color:'#FFD93D',
                             fontWeight:"bold",
                             alignSelf:'center',
-                            textAlign:'center',fontWeight:"bold"
+                            textAlign:'center',fontWeight:"bold",
+                            width:wp('60%')
                         }} >
                             Send and receive money seamlessly
                         </Text>
@@ -144,9 +125,8 @@ const Welcome = ({route,navigation}) => {
                             style={{position:'relative',width:'100%',backgroundColor:'#fff',height:50,borderRadius:10,
                             justifyContent:'center',alignItems:'center',marginTop:hp('3%')}} >
                             <Text style={{
-                                fontSize:20,fontWeight:"bold",color:'#357C3C'}} >
+                                fontSize:20,fontWeight:"bold",color:'#357C3C'}}>
                                 I have an account</Text>
-
                         </TouchableOpacity>
 
                     </View>

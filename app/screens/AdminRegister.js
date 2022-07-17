@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {View,Text,StatusBar,TextInput,StyleSheet,ActivityIndicator,
     SafeAreaView,TouchableOpacity,Image} from 'react-native';
-import PropTypes from 'prop-types'
 import ButtonWIthText from '../components/ButtonWithText/ButtonWithText';
 import TextHeader from '../components/TextHeader/TextHeader';
 import Icon from 'react-native-vector-icons/Feather';
 import Toast from "react-native-simple-toast";
-import { Picker } from "@react-native-picker/picker";
 
 import {
     heightPercentageToDP as hp,
@@ -14,8 +12,8 @@ import {
 } from 'react-native-responsive-screen';
 
 import sparkhome from '../../assets/sparkbg.png';
-import {useSelector,useDispatch} from  'react-redux';
-import {registerUser,storeEmail,storeRegEmail} from '../actions';
+// import {useSelector,useDispatch} from  'react-redux';
+
 
 
 
@@ -42,40 +40,11 @@ const LabelInput = ({label,placeText,keyboard,secure,onChangeText,value}) => {
     )
 }
 
-const CountryPicker = ({ country, onValueChange }) => (
-    <Picker
-        selectedValue={country}
-        style={{ height: 40, width: 200,marginHorizontal:wp('6%') }}
-        onValueChange={onValueChange}
-    >
-        <Picker.Item label="Uganda" value="Uganda" />
-        <Picker.Item label="Zambia" value="Zambia" />
-        <Picker.Item label="Kenya" value="Kenya" />
-        <Picker.Item label="Ghana" value="Ghana" />
-        <Picker.Item label="Cameroon" value="Cameroon" />
-        <Picker.Item label="Nigeria" value="Nigeria" />
-        <Picker.Item label="UAE" value="UAE" />
-    </Picker>
-);
-
-CountryPicker.propTypes = {
-    country: PropTypes.string,
-    onValueChange: PropTypes.func,
-};
 
 
 
-const EmailAndNumber = ({route,navigation}) => {
 
-    // useEffect(() => {
-    //     return () => {
-    //         setSubmitting(false);
-    //         setMessage("");
-    //         setFail(false);
-    //         setSuccess(false);
-    //         // 
-    //     }
-    // }, []);
+const AdminRegister = ({route,navigation}) => {
     const styles = StyleSheet.create({
         container:{
             backgroundColor:'#f7f7f7',
@@ -108,7 +77,7 @@ const EmailAndNumber = ({route,navigation}) => {
             borderRadius:wp('2%'),
             marginTop:-120,
             marginBottom:hp('4%'),
-            height:hp('70%')
+            height:hp('50%')
 
         },title:{
             fontWeight:'bold',
@@ -118,10 +87,8 @@ const EmailAndNumber = ({route,navigation}) => {
             textAlign:"center"
         }
     });
-
-    const [country, setCountry] = useState("Uganda");
-    const [email,setEmail] = useState("");
-    const [phone,setPhone] = useState("")
+    const [username,setUsername] = useState("");
+    const [password,setPassword] = useState("")
  
     const [startReg, setStartReg] = useState(false);
     const [registered, setRegistered] = useState(false)
@@ -138,17 +105,18 @@ const EmailAndNumber = ({route,navigation}) => {
 
 
     const [message, setMessage] = useState("")
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
 
-    
-    handleChangeCountry = (country) => {
-        setCountry(country)
+    // console.log(message);
+    console.log("===now submitting===")
+    console.log(success);
+    console.log("displayed the info")
+
+    const handleUsername = (username) => {
+        setUsername(username)
     }
-    const handleEmail = (email) => {
-        setEmail(email)
-    }
-    const handlePhone=(phone) => {
-        setPhone(phone)
+    const handlePassword=(password) => {
+        setPassword(password)
     }
 
     useEffect(() => {
@@ -173,7 +141,7 @@ const EmailAndNumber = ({route,navigation}) => {
                         </View>
                     </TouchableOpacity>
                     <View>
-                        <Text style={styles.headerText}>Register</Text>
+                        <Text style={styles.headerText}>Admin Login</Text>
                     </View>
                     <View  style={{width:wp('2%')}} />
                 </View>
@@ -183,68 +151,51 @@ const EmailAndNumber = ({route,navigation}) => {
             </SafeAreaView>
             <View style={styles.content}>
                 <View>
-                    <Text style={styles.title}>Personal Information &gt;</Text>
+                    <Text style={styles.title}>Admin Information &gt;</Text>
                 </View>
                 <View style={{marginHorizontal:wp('5%')}}>
                     <LabelInput 
-                        label="Email"
-                        placeText="e.g sparkremit@gmail.com"
-                        value={email}
-                        onChangeText={handleEmail}
+                        label="username"
+                        placeText="e.g admin"
+                        value={username}
+                        onChangeText={handleUsername}
                     />
                     <LabelInput 
-                        label="Phone"
-                        placeText="e.g 256706626855"
-                        keyboard="numeric"
-                        value={phone}
-                        onChangeText={handlePhone}
-                    />
-
-                    <Text style={{marginHorizontal:wp('4%'),fontSize:20,marginTop:hp('4%')}}>
-                        Choose the country
-                    </Text>
-                    <CountryPicker
-                        country={country}
-                        onValueChange={handleChangeCountry}
-                    />
-                    <View style={{marginHorizontal:wp('5%'),marginTop:hp('1%')}}>
-                        <Text style={{textAlign:"center"}}>
-                            We will send you a code to your email to verify
-                        </Text>
-                    </View>
+                        label="Password"
+                        secure={true}
+                        // keyboard="numeric"
+                        value={password}
                     
+                        onChangeText={handlePassword}
+                    /> 
                     <TouchableOpacity style={{backgroundColor:"green",
                         paddingVertical:hp('2%'),borderRadius:hp('3%'),marginTop:hp('2%')}}
                         
                         onPress={() => {
-                            //dispatch(registerUser(email,phone))
                             setSubmitting(true)
-                            fetch('https://pregcare.pythonanywhere.com/api/auth/register/',{
+                            fetch(`https://pregcare.pythonanywhere.com/api/auth/login-admin/?username=${username}&password=${password}`,{
                                 method:'POST',
-                                body:JSON.stringify({             
-                                    email:email,
-                                    phone:phone,
-                                    country:country,
-                                }),
                                 headers:{'Content-type': 'application/json;',}
-                            }).then(response => response.json())
+                            })
+                            .then(response => response.json())
                             .then(data => {
                                 if(data.status === true){
                                     setSubmitting(false)
                                     setSuccess(true)
                                     setMessage(data.message)
-                                    dispatch(storeRegEmail(email))
-                                    Toast.show("Registration successful")
-                                    navigation.navigate('VerifyEmail')
+                                    Toast.show(data.message)
+                                    // dispatch(storeRegEmail(email))
+                                    //==have to instead store the admin username
+                                    navigation.navigate('AdminDash')
                                 }else{
                                     setSubmitting(false);
                                     setFail(true)
-                                    Toast.show("Registration Failed")
+                                    Toast.show(data.message)
                                 }
                             }).catch(error => {
                                 setSubmitting(false);
                                 setFail(true)
-                                Toast.show("Registration failed")
+                                Toast.show(data.message)
                             })
                             //====only navigate if status is true
                             
@@ -252,7 +203,7 @@ const EmailAndNumber = ({route,navigation}) => {
                         }}
                     >
                         <Text style={{textAlign:"center",fontSize:15,color:"white",fontWeight:"bold"}}>
-                            Continue
+                            Login
                         </Text>
                     </TouchableOpacity>
                         <Text style={{textAlign:"center"}}>
@@ -262,7 +213,7 @@ const EmailAndNumber = ({route,navigation}) => {
                                 <ActivityIndicator size="large" color="green" 
                                     style={{marginTop:10,fontWeight:"bold"}}   
                                 />) 
-                                :(<Text>{message}</Text>)
+                                :(<Text>''</Text>)
                             }
                             
                         </Text>
@@ -271,17 +222,8 @@ const EmailAndNumber = ({route,navigation}) => {
             </View>
         </View>
       
-            // <Text style={{fontSize:15}}>By opening an account, u agree to our terms and conditions</Text>
-            // <ButtonWIthText  text="Open Account" 
-            //     background="blue" textColor="white" maTop={hp('3%')} 
-            //     onPress={() => navigation.navigate('MobileMoney')}
-            // />
-        /* <ButtonWIthText  text="Bank" 
-                background="blue" textColor="white" 
-                onPress={() => navigation.navigate('BankDeposit')}
-            />  */
-        // </View>
+         
     )
 }
 
-export default EmailAndNumber;
+export default AdminRegister;

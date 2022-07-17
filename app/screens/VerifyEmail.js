@@ -21,6 +21,9 @@ const VerifyEmail = ({route,navigation}) => {
 
 
     const [submitting, setSubmitting] = useState(false)
+
+    const [submittingAno, setSubmittingAno] = useState(false)
+
     const [otpData, setOtpData] = useState({}) 
 
     const [verified, setVerified] = useState(false);
@@ -82,17 +85,17 @@ const VerifyEmail = ({route,navigation}) => {
                             }) .then(response => response.json())
                             .then(data => {
                                 if(data.status === true){
-                                    setSubmitting(false)
+                                    setSubmittingAno(false)
                                     setSuccess(true)
                                     setMessage(data.message)
                                 }else{
-                                    setSubmitting(false)
+                                    setSubmittingAno(false)
                                     setFail(true)
                                     setMessage(data.message)
                                 }
                            
                             }).catch(error => {
-                                setSubmitting(false)
+                                setSubmittingAno(false)
                                 setFail(true)
                             })
                         }}
@@ -101,7 +104,7 @@ const VerifyEmail = ({route,navigation}) => {
                     </TouchableOpacity>
                     <Text style={{textAlign:"center"}}>
                         {
-                            submitting ? <ActivityIndicator size="large" color="green" 
+                            submittingAno ? <ActivityIndicator size="large" color="green" 
                                             style={{marginTop:10,fontWeight:"bold"}}   
                                         /> : <Text>{message}</Text>
                         }

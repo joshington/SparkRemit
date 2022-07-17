@@ -7,6 +7,9 @@ import {
 import { setWarningFilter } from 'react-native/Libraries/LogBox/Data/LogBoxData';
 import { useDispatch,useSelector } from 'react-redux';
 import {all_spark_users,storeSparkUser} from '../actions';
+import Toast from "react-native-simple-toast";
+
+
 
 
 const LabelInput = ({label,placeText,keyboard,secure,onChangeText,value}) => {
@@ -77,7 +80,7 @@ const FinalSend = ({navigation}) => {
             <LabelInput 
                 label="Enter Amount"
                 Enter Amount
-                placeText=" UGX 1000"
+                placeText="E.g 1000"
                 value={amount}
                 onChangeText={
                     handleAmount
@@ -87,8 +90,8 @@ const FinalSend = ({navigation}) => {
             />
             
                 <TouchableOpacity style={{backgroundColor:"green",
-                    marginHorizontal:wp('10%'),borderRadius:10,marginTop:hp('7%'),
-                    height:hp('10%'),margin:hp('4%')}}
+                    marginHorizontal:wp('10%'),borderRadius:15,marginTop:hp('7%'),padding:hp('1%'),
+                    height:hp('7%'),margin:hp('4%')}}
                     onPress={() => {
                         setSubmitting(true);
                         fetch(`https://pregcare.pythonanywhere.com/api/wallet/send-wallet-user/?email=${email}&amount=${amount}&recipient=${spark_user}`,{
@@ -101,10 +104,12 @@ const FinalSend = ({navigation}) => {
                                 setSubmitting(false)
                                 setSuccess(true)
                                 setMessage(data.message)
+                                Toast.show(data.message)
                                 navigation.navigate("Dashboard")
                             }else{
                                 setSubmitting(false)
                                 setFail(true)
+                                Toast.show(data.message)
                                 setMessage(data.message)
                             }
                         }).catch(error => {
@@ -113,7 +118,7 @@ const FinalSend = ({navigation}) => {
                         })
                     }}
                 >
-                    <Text style={{textAlign:"center",fontSize:18,marginTop:hp('3%'),color:"white"}}>
+                    <Text style={{textAlign:"center",fontSize:18,color:"white",fontWeight:"bold"}}>
                         Confirm Send
                     </Text>
                 </TouchableOpacity>
@@ -124,7 +129,7 @@ const FinalSend = ({navigation}) => {
                             <ActivityIndicator size="large" color="green" 
                                 style={{marginTop:10,fontWeight:"bold"}}   
                             />
-                        ):<Text style={{fontSize:18}}>{message}</Text> 
+                        ):Toast.show(message)
                     }
                     
                 </Text>

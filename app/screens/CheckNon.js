@@ -5,13 +5,13 @@ import {View,Text,StatusBar,TextInput,StyleSheet,ActivityIndicator,
 import ButtonWIthText from '../components/ButtonWithText/ButtonWithText';
 import TextHeader from '../components/TextHeader/TextHeader';
 import Icon from 'react-native-vector-icons/Feather';
-
+import Toast from "react-native-simple-toast";
 
 import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import Toast from "react-native-simple-toast";
+
 import sparkhome from '../../assets/sparkbg.png';
 import {useSelector,useDispatch} from  'react-redux';
 import {registerUser,storeEmail,storeRegEmail} from '../actions';
@@ -22,26 +22,7 @@ import colors from './colors';
 
 
 
-const LabelInput = ({label,placeText,keyboard,secure,onChangeText,value}) => {
-    return (
-        <View style={{marginTop:hp('2%')}}>
-            <Text style={{color:"green",fontWeight:"bold"}}>{label}</Text>
-            <TextInput
-                placeholder={placeText}
-                style={{display:"flex",
-                    paddingHorizontal:wp('3%'),
-                    height:50,width:wp('80%'),borderRadius:wp('5%'),borderWidth:wp('0.5%')
-                }}
-                keyboardType={keyboard}
-                secureTextEntry={secure ? true : false}
-                onChangeText={onChangeText}
-                value={value}
-                autoFocus={true}
-            />
-            
-        </View>
-    )
-}
+
 
 
 const CustomTextInput = function(props) {
@@ -64,7 +45,7 @@ const CustomTextInput = function(props) {
         />
         {RightComponent}
       </View>
-    );5
+    );
   };
   
   const styles = StyleSheet.create({
@@ -95,9 +76,13 @@ const CustomTextInput = function(props) {
 
 
 
-const ForgotPin = ({route,navigation}) => {
+const CheckNon = ({route,navigation}) => {
 
 
+    const email = useSelector(state => state.wallet.user_email)
+    //== getting the value of spark user
+    const spark_user = useSelector(state => state.wallet.spark_user)
+    console.log(spark_user)
 
 
     const [otpArray, setOtpArray] = useState(['','','','']);
@@ -164,7 +149,7 @@ const ForgotPin = ({route,navigation}) => {
 
 
 
-    const dispatch = useDispatch()
+   
 
 
     const [submitting, setSubmitting] = useState(false);
@@ -182,7 +167,7 @@ const ForgotPin = ({route,navigation}) => {
         // console.log(store_email)
         //====go ahead and push to the api====
         setSubmitting(true);
-        fetch(`https://pregcare.pythonanywhere.com/api/auth/create-new-pin/?email=${email}&PIN=${PIN}`,{
+        fetch(`https://pregcare.pythonanywhere.com/api/wallet/check-pin/?email=${email}&PIN=${PIN}`,{
             method:'POST',
             // body:JSON.stringify({             
             //     email:email,
@@ -195,14 +180,12 @@ const ForgotPin = ({route,navigation}) => {
                 setSubmitting(false)
                 setSuccess(true)
                 setMessage(data.message)
-                Toast.show(data.message)
-                dispatch(storeEmail(email))
-                navigation.navigate("Dashboard")
+                //dispatch(storeEmail(email))
+                navigation.navigate("ChooseMethod")
             }else{
                 setSubmitting(false)
                 setFail(true)
                 setMessage(data.message)
-                Toast.show(data.message)
             }
        
         }).catch(error => {
@@ -254,34 +237,7 @@ const ForgotPin = ({route,navigation}) => {
             textAlign:"center"
         }
     });
-    const [email,setEmail] = useState("");
-   
-    const [startReg, setStartReg] = useState(false);
-    const [registered, setRegistered] = useState(false)
-
-    const [regiData, setRegData] = useState({});
-  
-    //===above is to help me get the details
-
-
-
     
-
-  
-
-    const handleEmail = (email) => {
-        setEmail(email)
-    }
-    useEffect(() => {
-        return () => {
-            setStartReg(false);
-            setSubmitting(false);
-            setMessage("");
-            setSuccess(false);
-            setFail(false);
-            // 
-        }
-    }, []);
     return(
         <View style={styles.container}>
             <SafeAreaView style={styles.headerWrapper}>
@@ -294,7 +250,7 @@ const ForgotPin = ({route,navigation}) => {
                         </View>
                     </TouchableOpacity>
                     <View>
-                        <Text style={styles.headerText}>ForgotPin</Text>
+                        <Text style={styles.headerText}>PIN Verification</Text>
                     </View>
                     <View  style={{width:wp('2%')}} />
                 </View>
@@ -303,19 +259,12 @@ const ForgotPin = ({route,navigation}) => {
                 </View>
             </SafeAreaView>
             <View style={styles.content}>
-                <View>
-                    <Text style={styles.title}>Login Info &gt;</Text>
-                </View>
                 <View style={{marginHorizontal:wp('5%')}}>
-                    <LabelInput 
-                        label="EMAIL"
-                        placeText="e.g sparkremit@gmail.com"
-                        value={email}
-                        onChangeText={handleEmail}
-                    />
-                    <Text style={{fontWeight:"bold",marginTop:hp('5%'),color:"green"}}>
-                        CREATE NEW SPARK PIN</Text>
-                    <View style={{flexDirection:"row",display:"flex",
+                    <Text style={{fontWeight:"bold",marginTop:hp('5%'),
+                        color:"green",textAlign:"center",fontSize:20}}>
+                        ENTER PIN 
+                    </Text>
+                    <View style={{flexDirection:"row",display:"flex",marginHorizontal:wp('7%'),
                         justifyContent:"space-around",marginTop:hp('3%')}}>
                        {/* now here i add my pins ===*/}
                        {
@@ -339,16 +288,14 @@ const ForgotPin = ({route,navigation}) => {
                                 />
                            ))
                        }
-                    </View>
-                   
-                    
+                    </View> 
                     <TouchableOpacity style={{backgroundColor:"green",
                         paddingVertical:hp('2%'),borderRadius:hp('3%'),marginTop:hp('9%')}}
                         
                         onPress={() => onSubmitButtonPress()} 
                     >
                         <Text style={{textAlign:"center",fontSize:15,color:"white",fontWeight:"bold"}}>
-                            Create
+                            Continue
                         </Text>
                     </TouchableOpacity>
                     <Text style={{textAlign:"center"}}>
@@ -366,8 +313,7 @@ const ForgotPin = ({route,navigation}) => {
                 </View>
             </View>
         </View>
-      
     )
 }
 
-export default ForgotPin;
+export default CheckNon;

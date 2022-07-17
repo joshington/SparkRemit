@@ -224,7 +224,8 @@ const SparkPin = ({route,navigation}) => {
                         Create 4 digit Spark PIN
                     </Text>
 
-                    <View style={{flexDirection:"row",display:"flex",justifyContent:"space-around"}}>
+                    <View style={{flexDirection:"row",display:"flex",
+                       justifyContent:"space-around",marginHorizontal:wp('6%')}}>
                        {/* now here i add my pins ===*/}
                        {
                            [

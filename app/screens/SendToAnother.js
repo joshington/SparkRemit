@@ -67,7 +67,6 @@ const SendToAnother =({route,navigation}) => {
                         <Text style={{fontSize:22,fontWeight:"bold"}}>Next</Text>
                     </TouchableOpacity>
                 </View>
-            
             </View>
         )
         

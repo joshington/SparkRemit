@@ -10,6 +10,7 @@ import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import Toast from "react-native-simple-toast";
 import ButtonWIthText from '../components/ButtonWithText/ButtonWithText';
 import { useSelector} from 'react-redux';
 
@@ -61,7 +62,7 @@ const SparkUsername = ({route,navigation}) => {
          
             <View style={{marginHorizontal:wp('5%')}}>
                 <LabelInput 
-                    placeText="e.g @bosajosh"
+                    placeText="e.g @spark"
                     value={username}
                     onChangeText={handleUsername}
                 />
@@ -96,14 +97,17 @@ const SparkUsername = ({route,navigation}) => {
                                 if(data.status === true){
                                     setSubmitting(false)
                                     setMessage(data.message)
+                                    Toast.show(data.message)
                                     navigation.navigate('Dashboard')
                                 }else{
                                     setSubmitting(false)
                                     setMessage(data.message)
+                                    Toast.show(data.message)
                                 }
                             }).catch(error => {
                                 setSubmitting(false)
                                 setMessage(error.message)
+                                Toast.show(data.message)
                             })
                         
                     }}
@@ -117,7 +121,7 @@ const SparkUsername = ({route,navigation}) => {
                             <ActivityIndicator size="large" color="green" 
                                 style={{marginTop:10,fontWeight:"bold"}}   
                             />
-                        ):<Text>{message}</Text>
+                        ):<Text>''</Text>
                     }
                 </Text>
         </View>

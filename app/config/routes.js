@@ -44,7 +44,20 @@ import SendMoney from '../screens/Send';
 import Login from '../screens/Login';
 import ForgotPin from '../screens/ForgotPin';
 import FinalSend from '../screens/FinalSend';
-
+import AdminProfile from '../screens/AdminProfile';
+import AdminDash from '../screens/AdminDash'
+import AdminRegister from '../screens/AdminRegister';
+import SendNonUser from '../screens/SendToNonUser';
+import CheckPin from '../screens/CheckPin';
+import WithdrawAmount from '../screens/WithdrawAmount'
+import CheckNon from '../screens/CheckNon';
+import ChooseMethod from '../screens/ChooseMthd';
+import SendBankNon from '../screens/SendBankNon';
+import SendBankMine from '../screens/SendBankMine';
+import SelfMthd from '../screens/SelfMthd';
+import UserSettings from '../screens/UserSettings';
+import VirtualAct from '../screens/VirtualAct';
+import AddAccount from '../screens/AddAccount';
 
 
 const Stack = createStackNavigator()
@@ -89,7 +102,7 @@ const HomeStack = () => {
         <Stack.Navigator>
             <Stack.Screen options={{headerShown:false}} name="Welcome" component={Welcome} />
             <Stack.Screen options={{headerShown:false}}  name="Register" component={EmailAndNumber} />
-            <Stack.Screen   name="Login" component={Login} />
+            <Stack.Screen  options={{headerShown:false}} name="Login" component={Login} />
             <Stack.Screen   options={{headerShown:false}} name="ForgotPin" component={ForgotPin} />
             <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
             <Stack.Screen name="SparkPin" component={SparkPin} />
@@ -100,7 +113,20 @@ const HomeStack = () => {
             <Stack.Screen  name="SendMoney" component={SendMoney}  />
             <Stack.Screen  name="FinalSend" component={FinalSend}  />
             <Stack.Screen  name="MobileMoney" component={MobileMoney}  />
-           
+            <Stack.Screen  options={{headerShown:false}} name="AdminDash" component={AdminDash}  />
+            <Stack.Screen  name="AdminProfile" component={AdminProfile}  />
+            <Stack.Screen options={{headerShown:false}}  name="AdminRegister" component={AdminRegister}  />
+            <Stack.Screen  name="SendNonUser" component={SendNonUser}  />
+            <Stack.Screen  options={{headerShown:false}} name="CheckPin" component={CheckPin}  />
+            <Stack.Screen   name="WithdrawAmount" component={WithdrawAmount}  />
+            <Stack.Screen   options={{headerShown:false}} name="CheckNon" component={CheckNon}  />
+            <Stack.Screen   name="ChooseMethod" component={ChooseMethod}  />
+            <Stack.Screen   name="SendBankNon" component={SendBankNon}  />
+            <Stack.Screen   options={{headerShown:false}}  name="BankWithdraw" component={SendBankMine}  />
+            <Stack.Screen   name="Method" component={SelfMthd}  />
+            <Stack.Screen   name="UserSettings" component={UserSettings}  />
+            <Stack.Screen  options={{headerShown:false}}  name="VirtualAccount" component={VirtualAct}  />
+            <Stack.Screen  options={{headerShown:false}}  name="AddAccount" component={AddAccount}  />
             
         </Stack.Navigator>
     )

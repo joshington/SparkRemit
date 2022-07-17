@@ -98,30 +98,21 @@ const CurrencyPicker = ({ currency, onValueChange }) => (
         style={{ height: 70, width: 400 }}
         onValueChange={onValueChange}
     >
-        <Picker.Item label="Burundi Franc" value="BIF" />
-        <Picker.Item label="Canadian Dollar" value="CAD" />
-        <Picker.Item label="Congolese Franc" value="CDF" />
+      
         <Picker.Item label="Cape Verdean Escudo" value="CVE" />
         <Picker.Item label="Euro" value="EUR" />
         <Picker.Item label="British Pound Sterling" value="GBP" />
         <Picker.Item label="Ghanaian Cedi" value="GHS" />
-        <Picker.Item label="Gambian Dalasi" value="GMD" />
-        <Picker.Item label="Guinean Franc" value="GNF" />
+        <Picker.Item label="UAE Dirham" value="AED" />
         <Picker.Item label="Kenyan Shilling" value="KES" />
-        <Picker.Item label="Liberian Dollar" value="LRD" />
-        <Picker.Item label="Malawian Kwacha" value="MWK" />
-        <Picker.Item label="Mozambican Metical" value="MZN" />
+       
         <Picker.Item label="Nigerian Naira" value="NGN" />
         <Picker.Item label="Rwandan Franc" value="RWF" />
-        <Picker.Item label="Sierra Leonean Leone" value="SLL" />
-        <Picker.Item label="São Tomé and Príncipe Dobra" value="STD" />
         <Picker.Item label="Tanzanian Shilling" value="TZS" />
         <Picker.Item label="Ugandan Shilling" value="UGX" />
         <Picker.Item label="United States Dollar" value="USD" />
-        <Picker.Item label="CFA Franc BEAC" value="XAF" />
-        <Picker.Item label="CFA Franc BCEAO" value="XOF" />
-        <Picker.Item label="Zambian Kwacha" value="ZMW" />
-        <Picker.Item label="Zimbabwean Dollar" value="ZWD" />
+       
+        
     </Picker>
 );
 
@@ -170,7 +161,7 @@ const MobileMoney = ({route,navigation}) => {
             //and the transaction id
             //==time for the margic to start
             dispatch(walletTopUp(target_email,amount))
-            Toast.show("Payment completed")
+            Toast.show("Topup completed successfully")
             navigation.navigate("Dashboard")
             //
             //this above does the magic
@@ -261,7 +252,7 @@ const MobileMoney = ({route,navigation}) => {
                         amount,
                         currency,
                         payment_options:
-                            "mpesa, mobilemoneyghana, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia. mobilemoneytanzania",
+                            "card, account, ussd, qr, mpesa, mobilemoneyghana, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia. mobilemoneytanzania, barter, bank transfer",
                     
                     
                     }}
@@ -271,7 +262,7 @@ const MobileMoney = ({route,navigation}) => {
                             onPress={props.onPress}
                             isBusy={props.isInitializing}
                             disabled={props.disabled}>
-                                <Text style={{fontSize:18,color:"white"}}>Pay </Text>
+                                <Text style={{fontSize:18,color:"white"}}>Top up </Text>
                         </TouchableOpacity>
                     )}
                 />

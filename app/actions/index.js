@@ -4,12 +4,20 @@ import {
 
     GET_WALLET_SUCCESS,GET_WALLET_FAIL,
     GET_TRANSACTIONS_SUCCESS,GET_TRANSACTIONS_FAIL,
-    GET_SPARK_USERS_SUCCESS,GET_SPARK_USERS_FAIL,STORE_SPARK_USER
+    GET_SPARK_USERS_SUCCESS,GET_SPARK_USERS_FAIL,STORE_SPARK_USER,
+    STORE_NON_SPARK,STORE_COMMAND,GET_ADMIN_SUCCESS,GET_ADMIN_FAIL
 
 
 } from "./actionTypes"
 import axios from 'axios';
 
+
+export const checkCommand = (spark_user) => {
+    return {
+        type:STORE_COMMAND,
+        spark_user
+    }
+}
 
 
 export const check_text = (uname) => {
@@ -74,6 +82,27 @@ export const getWalletDetails = (user_email) => {
     }
 }
 
+export const getAdminDetails = () => {
+    return (dispatch) => {
+        axios.get('https://pregcare.pythonanywhere.com/api/auth/user-analytics/')
+        .then(response => {
+            dispatch({
+                type:GET_ADMIN_SUCCESS,
+                payload:response.data
+            })  
+        }).catch(error => {
+            dispatch({
+                type:GET_ADMIN_FAIL,
+                payload:error.payload
+            })
+        })
+    }
+}
+
+
+
+
+
 //we are going to ue this action when storing the spark user
 export const storeSparkUser = (user) => {
     return{
@@ -83,6 +112,15 @@ export const storeSparkUser = (user) => {
 }
 //action is to store email in state 
 
+
+export const storeNonSpark = (receiver_phone, country,amount) => {
+    return {
+        type:STORE_NON_SPARK,
+        receiver_phone,
+        country,
+        amount
+    }
+}
 
 export const storeEmail = (user_email) => {
     return {
